@@ -1,0 +1,5 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target" : { "namespace": "android_app", "package_name": "com.rasil.v2",
+               "sha256_cert_fingerprints": ["0b:95:1a:e6:04:34:e1:31:91:86:be:8e:fa:10:7b:b6:02:f0:27:cb:af:fe:e8:51:9c:c1:74:86:87:a8:37:ba"] }
+}]
