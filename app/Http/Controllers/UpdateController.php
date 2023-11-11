@@ -356,7 +356,9 @@ class UpdateController extends Controller
             $sms_gateway= ['twilio_sms',
             'nexmo_sms',
             'msg91_sms',
-            '2factor_sms'];
+            '2factor_sms',
+            'oursms'
+        ];
 
             $data= BusinessSetting::whereIn('key',$sms_gateway)->pluck('value','key')->toArray();
             foreach($data as $key => $value){
@@ -390,6 +392,13 @@ class UpdateController extends Controller
                         ];
                     } elseif ($key == 'msg91_sms') {
                         $sms_gateway='msg91';
+                        $additional_data = [
+                            'status' => data_get($decoded_value,'status',null), 
+                            'template_id' =>  data_get($decoded_value,'template_id',null),
+                            'auth_key' =>  data_get($decoded_value,'authkey',null),
+                        ];
+                    } elseif ($key == 'oursms') {
+                        $sms_gateway='oursms';
                         $additional_data = [
                             'status' => data_get($decoded_value,'status',null), 
                             'template_id' =>  data_get($decoded_value,'template_id',null),

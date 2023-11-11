@@ -24,7 +24,7 @@ class SMSModuleController extends Controller
                 }
             }
         }
-        $data_values=  Setting::where('settings_type','sms_config')->whereIn('key_name', ['twilio','nexmo','2factor','msg91'])->get() ?? [];
+        $data_values=  Setting::where('settings_type','sms_config')->whereIn('key_name', ['twilio','nexmo','2factor','msg91', 'oursms'])->get() ?? [];
         return view('admin-views.business-settings.sms-index',compact('data_values','published_status','payment_url'));
     }
 
@@ -62,6 +62,12 @@ class SMSModuleController extends Controller
                 'template_id' => $request['template_id'],
                 'auth_key' => $request['auth_key'],
             ];
+        } elseif ($module == 'oursms') {
+            $additional_data = [
+                'status' => $request['status'],
+                'template_id' => $request['template_id'],
+                'auth_key' => $request['auth_key'],
+            ];
         }
 
         $data= ['gateway' => $module ,
@@ -79,7 +85,7 @@ class SMSModuleController extends Controller
     ]);
 
     if ($request['status'] == 1) {
-        foreach (['twilio','nexmo','2factor','msg91'] as $gateway) {
+        foreach (['twilio','nexmo','2factor','msg91', 'oursms'] as $gateway) {
             if ($module != $gateway) {
                 $keep = Setting::where(['key_name' => $gateway, 'settings_type' => 'sms_config'])->first();
                 if (isset($keep)) {

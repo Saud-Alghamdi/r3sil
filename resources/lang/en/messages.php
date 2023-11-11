@@ -3509,4 +3509,5 @@
   'Denied_Deliveryman_List' => 'Denied Deliveryman List',
   'deliveryman_added_successfully' => 'Deliveryman added successfully',
   'The api key field is required.' => 'The api key field is required.',
+  'The selected gateway is invalid.' => 'The selected gateway is invalid.',
 );

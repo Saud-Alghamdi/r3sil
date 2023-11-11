@@ -14,7 +14,6 @@
 
             <div class="row">
                 @foreach($data_values as $gateway)
-                @php dd($data_values) @endphp
                     <div class="col-md-6 mb-30 mb-4">
                         <div class="card">
                             <div class="card-header">

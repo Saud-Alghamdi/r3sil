@@ -27,6 +27,11 @@ trait  SmsGateway
             return self::two_factor($receiver, $otp);
         }
 
+        $config = self::get_settings('oursms');
+        if (isset($config) && $config['status'] == 1) {
+            return self::two_factor($receiver, $otp);
+        }
+
         $config = self::get_settings('msg91');
         if (isset($config) && $config['status'] == 1) {
             return self::msg_91($receiver, $otp);
