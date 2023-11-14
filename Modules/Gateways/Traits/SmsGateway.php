@@ -6,6 +6,7 @@ use SimpleXMLElement;
 use Twilio\Rest\Client;
 use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Client as HpptClient;
+use Illuminate\Support\Facades\Log;
 use Modules\Gateways\Entities\Setting;
 
 trait  SmsGateway
@@ -29,7 +30,7 @@ trait  SmsGateway
 
         $config = self::get_settings('oursms');
         if (isset($config) && $config['status'] == 1) {
-            return self::two_factor($receiver, $otp);
+            return self::oursms($receiver, $otp);
         }
 
         $config = self::get_settings('msg91');
@@ -90,6 +91,65 @@ trait  SmsGateway
 
         return 'not_found';
     }
+
+
+    public static function oursms($receiver, $otp): string
+    {
+        $config = self::get_settings('oursms');
+        $response = 'error';
+
+        if (isset($config) && $config['status'] == 1) {
+            $token = $config['api_key'];
+            $url = "https://api.oursms.com/api-a/msgs";
+
+            $postData = http_build_query(array(
+                'username' => 'Sahel',
+                'token' => $token,
+                'src' => 'Matajir-One',
+                'dests' => $receiver,
+                'body' => $otp,
+                'priority' => 0,
+                'delay' => 0,
+                'validity' => 0,
+                'maxParts' => 0,
+                'dlr' => 0,
+                'prevDups' => 0
+            ));
+
+            Log::info("POST DATA IS:");
+            Log::info($postData);
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $server_output = curl_exec($ch);
+
+            if (curl_errno($ch)) {
+                Log::error('Curl error while sending SMS via oursms: ' . curl_error($ch));
+                $response = 'error';
+            } else {
+                $apiResponse = json_decode($server_output, true); // Decode the JSON response
+            
+                // Check for success response from the API based on the 'accepted' field
+                if (isset($apiResponse['accepted']) && $apiResponse['accepted'] == 1) {
+                    $response = 'success';
+                    Log::info('SMS sent successfully via oursms. Job ID: ' . $apiResponse['jobId']);
+                } else {
+                    Log::error('Failed to send SMS via oursms. Response: ' . $server_output);
+                    $response = 'error';
+                }
+            }
+            
+            curl_close($ch);            
+        }
+
+        return $response;
+    }
+
 
     public static function twilio($receiver, $otp): string
     {
