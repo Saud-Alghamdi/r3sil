@@ -17,6 +17,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Email Status
+    |--------------------------------------------------------------------------
+    |
+    | This option controls whether email sending is enabled or disabled
+    | in your application. Set it to true to enable email sending and
+    | false to disable it.
+    |
+    */
+
+    'status' => env('MAIL_STATUS', true),
+
+    /*
+    |--------------------------------------------------------------------------
     | Mailer Configurations
     |--------------------------------------------------------------------------
     |
