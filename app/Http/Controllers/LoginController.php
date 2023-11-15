@@ -226,6 +226,10 @@ class LoginController extends Controller
         
             $url = url('/').'/password-reset?token='.$token;
 
+            try {
+                $mail_status = Helpers::get_mail_status('forget_password_mail_status_admin');
+
+                
             info("LOG STATUS:");
             info(config('mail.status'));
             info("admin email:");
@@ -233,8 +237,7 @@ class LoginController extends Controller
             info("mail status: ");
             info($mail_status);
 
-            try {
-                $mail_status = Helpers::get_mail_status('forget_password_mail_status_admin');
+            
                 if (config('mail.status') && $admin['email'] && $mail_status == '1') {
                     Mail::to($admin['email'])->send(new AdminPasswordResetMail($url,$admin['f_name']));
                     session()->put('log_email_succ',1);
