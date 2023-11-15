@@ -37,21 +37,21 @@ class ConfigServiceProvider extends ServiceProvider
         try {
             $data = BusinessSetting::where(['key' => 'mail_config'])->first();
             $emailServices = json_decode($data['value'], true);
-            if ($emailServices) {
-                $config = array(
-                    'status' => (Boolean)(isset($emailServices['status'])?$emailServices['status']:1),
-                    'driver' => $emailServices['driver'],
-                    'host' => $emailServices['host'],
-                    'port' => $emailServices['port'],
-                    'username' => $emailServices['username'],
-                    'password' => $emailServices['password'],
-                    'encryption' => $emailServices['encryption'],
-                    'from' => array('address' => $emailServices['email_id'], 'name' => $emailServices['name']),
-                    'sendmail' => '/usr/sbin/sendmail -bs',
-                    'pretend' => false,
-                );
-                Config::set('mail', $config);
-            }
+            // if ($emailServices) {
+            //     $config = array(
+            //         'status' => (Boolean)(isset($emailServices['status'])?$emailServices['status']:1),
+            //         'driver' => $emailServices['driver'],
+            //         'host' => $emailServices['host'],
+            //         'port' => $emailServices['port'],
+            //         'username' => $emailServices['username'],
+            //         'password' => $emailServices['password'],
+            //         'encryption' => $emailServices['encryption'],
+            //         'from' => array('address' => $emailServices['email_id'], 'name' => $emailServices['name']),
+            //         'sendmail' => '/usr/sbin/sendmail -bs',
+            //         'pretend' => false,
+            //     );
+            //     Config::set('mail', $config);
+            // }
 
             $gateway=
             [ 'paytm',
