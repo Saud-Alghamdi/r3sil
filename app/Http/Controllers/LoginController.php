@@ -225,6 +225,14 @@ class LoginController extends Controller
             info("Password reset data: email={$admin['email']}, token={$token}");
         
             $url = url('/').'/password-reset?token='.$token;
+
+            info("LOG STATUS:");
+            info(config('mail.status'));
+            info("admin email:");
+            info($admin['email']);
+            info("mail status: ");
+            info($mail_status);
+
             try {
                 $mail_status = Helpers::get_mail_status('forget_password_mail_status_admin');
                 if (config('mail.status') && $admin['email'] && $mail_status == '1') {
