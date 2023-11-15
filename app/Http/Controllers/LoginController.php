@@ -220,19 +220,25 @@ class LoginController extends Controller
                 'created_by' => 'admin',
                 'created_at' => now(),
             ]);
+        
+            // Log data for debugging
+            info("Password reset data: email={$admin['email']}, token={$token}");
+        
             $url = url('/').'/password-reset?token='.$token;
             try {
                 $mail_status = Helpers::get_mail_status('forget_password_mail_status_admin');
-                if(config('mail.status') && $admin['email'] && $mail_status == '1'){
+                if (config('mail.status') && $admin['email'] && $mail_status == '1') {
                     Mail::to($admin['email'])->send(new AdminPasswordResetMail($url,$admin['f_name']));
                     session()->put('log_email_succ',1);
                 } else {
                     Toastr::error(translate('messages.Failed_to_send_mail'));
+        
+                    // Log error for debugging
+                    info("Failed to send mail: email={$admin['email']}, mail_status={$mail_status}");
                 }
-
-            } catch (\Throwable $th) {
-                info($th->getMessage());
-                Toastr::error(translate('messages.Failed_to_send_mail'));
+            } catch (\Exception $e) {
+                // Log exception for debugging
+                info("Exception caught: {$e->getMessage()}");
             }
             return back();
         }
